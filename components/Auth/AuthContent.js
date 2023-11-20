@@ -1,49 +1,55 @@
-import { useState } from 'react';
-import { Alert, StyleSheet, View } from 'react-native';
+import { useState } from 'react'
+import { Alert, StyleSheet, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
-import FlatButton from '../ui/FlatButton';
-import AuthForm from './AuthForm';
-import { Colors } from '../../constants/styles';
+import FlatButton from '../ui/FlatButton'
+import AuthForm from './AuthForm'
+import { Colors } from '../../constants/styles'
 
 function AuthContent({ isLogin, onAuthenticate }) {
+  const navigation = useNavigation()
 
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
     password: false,
     confirmEmail: false,
     confirmPassword: false,
-  });
+  })
 
   function switchAuthModeHandler() {
-    // Todo
+    if (isLogin) {
+      navigation.navigate('Signup')
+    } else {
+      navigation.navigate('Login')
+    }
   }
 
   function submitHandler(credentials) {
-    let { email, confirmEmail, password, confirmPassword } = credentials;
+    let { email, confirmEmail, password, confirmPassword } = credentials
 
-    email = email.trim();
-    password = password.trim();
+    email = email.trim()
+    password = password.trim()
 
-    const emailIsValid = email.includes('@');
-    const passwordIsValid = password.length > 6;
-    const emailsAreEqual = email === confirmEmail;
-    const passwordsAreEqual = password === confirmPassword;
+    const emailIsValid = email.includes('@')
+    const passwordIsValid = password.length > 6
+    const emailsAreEqual = email === confirmEmail
+    const passwordsAreEqual = password === confirmPassword
 
     if (
       !emailIsValid ||
       !passwordIsValid ||
       (!isLogin && (!emailsAreEqual || !passwordsAreEqual))
     ) {
-      Alert.alert('Invalid input', 'Please check your entered credentials.');
+      Alert.alert('Invalid input', 'Please check your entered credentials.')
       setCredentialsInvalid({
         email: !emailIsValid,
         confirmEmail: !emailIsValid || !emailsAreEqual,
         password: !passwordIsValid,
         confirmPassword: !passwordIsValid || !passwordsAreEqual,
-      });
-      return;
+      })
+      return
     }
-    onAuthenticate({ email, password });
+    onAuthenticate({ email, password })
   }
 
   return (
@@ -59,10 +65,10 @@ function AuthContent({ isLogin, onAuthenticate }) {
         </FlatButton>
       </View>
     </View>
-  );
+  )
 }
 
-export default AuthContent;
+export default AuthContent
 
 const styles = StyleSheet.create({
   authContent: {
@@ -80,4 +86,4 @@ const styles = StyleSheet.create({
   buttons: {
     marginTop: 8,
   },
-});
+})
